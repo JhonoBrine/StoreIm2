@@ -1,24 +1,5 @@
 from database import fetchall, fetchone, execute
-users = [
-        {
-            "id": 1,
-            "name": "John",
-            "email": "john@doe.com",
-            "password": "123456"
-        },
-        {
-            "id": 2,
-            "name": "Jane",
-            "email": "jane@doe.com",
-            "password": "123456"
-        },
-        {
-            "id": 3,
-            "name": "Jake",
-            "email": "jake@doe.com",
-            "password": "123456"
-        },
-    ]
+
 """
 CREATE TABLE `students` (
     `student_id` int NOT NULL AUTO_INCREMENT,
@@ -97,7 +78,7 @@ def update_user(id, data):
   return data
 
 def delete_user(id):
-  # @TODO - replace this with a database call DELETE
+
   cur = execute("""DELETE FROM students WHERE student_id = %s""", (id,))
   cur.fetchone()
   
