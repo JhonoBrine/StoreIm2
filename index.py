@@ -1,9 +1,13 @@
 from flask import Flask, request, jsonify, current_app
-from item import get_all_items, get_item_by_id, create_item, update_item, delete_item
 from flask_mysqldb import MySQL
 from database import set_database
 from dotenv import load_dotenv
 from os import getenv
+
+from item import get_all_items, get_item_by_id, create_item, update_item, delete_item
+from customer import get_all_customers, get_customer_by_id, create_customers, update_customer, delete_customer
+from order import get_all_orders, get_order_by_id, create_order, update_order, delete_order
+
 
 app = Flask(__name__)
 
@@ -26,6 +30,8 @@ set_database(mysql)
 def home():
   return "<h1>Welcome to the Store Home Page</h1> </br> <h3>Created by Rey Mar and Friends</h3>"
 
+### ITEMS
+
 @app.route("/items", methods=["GET", "POST"])
 def items():
   if request.method == "POST":
@@ -45,4 +51,51 @@ def items_by_id(id):
     result = delete_item(id)
   else:
     result = get_item_by_id(id)
+  return jsonify(result)
+
+### CUSTOMERS
+
+@app.route("/customers", methods=["GET", "POST"])
+def customers():
+  if request.method == "POST":
+    data = request.get_json()
+    result = create_customers(data)
+  else:
+    result = get_all_customers()
+  return jsonify(result)
+
+@app.route("/customers/<id>", methods=["GET", "PUT", "DELETE"])
+def customers_by_id(id):
+  if request.method == "PUT":
+    data = request.get_json()
+    data["id"] = id
+    result = update_customer(id, data)
+  elif request.method == "DELETE":
+    result = delete_customer(id)
+  else:
+    result = get_customer_by_id(id)
+  return jsonify(result)
+
+
+### ORDERS
+
+@app.route("/orders", methods=["GET", "POST"])
+def orders():
+  if request.method == "POST":
+    data = request.get_json()
+    result = create_order(data)
+  else:
+    result = get_all_orders()
+  return jsonify(result)
+
+@app.route("/orders/<id>", methods=["GET", "PUT", "DELETE"])
+def orders_by_id(id):
+  if request.method == "PUT":
+    data = request.get_json()
+    data["id"] = id
+    result = update_order(id, data)
+  elif request.method == "DELETE":
+    result = delete_order(id)
+  else:
+    result = get_order_by_id(id)
   return jsonify(result)

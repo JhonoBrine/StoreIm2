@@ -6,9 +6,9 @@ POST {{host}}/items
 Content-Type: application/json
 
 {
-    "itemName": "Piatos_Cheese-40g",
-    "itemQuantity": "35",
-    "itemPrice": "13.50"
+    "itemName": "ItemC",
+    "itemQuantity": "9",
+    "itemPrice": "11.0"
 }
 
 ### Get the list of all the items
