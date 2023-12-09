@@ -3,10 +3,17 @@
 This repository is for the subject, CSIT327 - Information Management 2.
 
 **Currently in the works**
+**_Almost at 75%_**
+
 
 # Idea
 
 Store Prices by **Steemp**
+
+
+To run file
+flask --app index run --debug
+
 
 Entities with their assigned columns
 > **Customer** : [_custID{PK}_, _custFname_, _custLName_,_isMember{Boolean}_]
