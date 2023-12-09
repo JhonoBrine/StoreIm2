@@ -1,0 +1,34 @@
+@host = http://127.0.0.1:5000
+
+### Create new customers
+POST {{host}}/customers
+Content-Type: application/json
+
+{
+    "custFname": "Joahnna Mi",
+    "custLname": "Bas",
+    "isMember": "0"
+}
+
+
+### Get the list of all the customers
+GET {{host}}/customers
+Content-Type: application/json
+
+### Get a single customer by ID
+GET {{host}}/customers/1
+Content-Type: application/json
+
+### Update a customer
+PUT {{host}}/customers/4
+Content-Type: application/json
+
+{
+    "custFname": "Jhon Lorenz",
+    "custLname": "Pabroa",
+    "isMember": "1"
+}
+
+### Delete a customer
+DELETE {{host}}/customers/5
+Content-Type: application/json
