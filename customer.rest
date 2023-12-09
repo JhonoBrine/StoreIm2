@@ -5,9 +5,9 @@ POST {{host}}/customers
 Content-Type: application/json
 
 {
-    "custFname": "Joahnna Mi",
+    "custFname": "Joahnna Mi2",
     "custLname": "Bas",
-    "isMember": "0"
+    "isMember": "1"
 }
 
 
@@ -30,5 +30,5 @@ Content-Type: application/json
 }
 
 ### Delete a customer
-DELETE {{host}}/customers/5
+DELETE {{host}}/customers/1
 Content-Type: application/json

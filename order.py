@@ -3,26 +3,24 @@ from database import fetchall, fetchone, execute
 ### CREATE Order
 
 def create_order(data):
-    result = None
-    row = result.fetchone()
-    
+    cur = execute("""CALL create_order(%s, %s, %s)""",
+                  (data["itemID"], data["custID"], data["orderQuantity"]))
+    row = cur.fetchone()
     data["orderID"] = row["orderID"]
-    
+    data["orderTotalPrice"] = row["orderTotalPrice"]
     return data
 
 ### Read all Order List
 
 def get_all_orders():
-    result = None
-    
-    return result
+    cur = fetchall("""SELECT * FROM orders_view""")
+    return cur
 
 ### Read Single Order
 
 def get_order_by_id(id):
-    result = None
-    
-    return result
+    cur = fetchone("""SELECT * FROM orders_view WHERE orderID = %s""", (id,))
+    return cur
 
 ### Update Single Order
 
@@ -38,7 +36,7 @@ def update_order(id,data):
 
 def delete_order(id):
     
-    result = execute(None)
+    result = execute("""DELETE FROM orders WHERE orderID = %s""", (id,))
     result.fetchone()
     
     return result.rowcount > 0

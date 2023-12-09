@@ -32,7 +32,8 @@ def update_customer(id, data):
 ### Delete a Single Customer
 
 def delete_customer(id):
-    result = execute("""DELETE FROM customer WHERE custID = %s""", (id, ))
-    result.fetchone()
-    
-    return result.rowcount > 0
+    cur = execute("""CALL delete_customer(%s)""", (id, ))
+    row = cur.fetchone()
+    if row is None:
+      return True
+    return False

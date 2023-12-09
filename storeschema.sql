@@ -33,35 +33,50 @@ CREATE TABLE Orders (
 
 -- CREATE VIEW
 
-CREATE 
-    ALGORITHM = UNDEFINED 
-    DEFINER = `root`@`localhost` 
-    SQL SECURITY DEFINER
-VIEW `dbstore`.`customer_view` AS
-    SELECT 
-        `dbstore`.`customer`.`custID` AS `custID`,
-        `dbstore`.`customer`.`custFname` AS `custFname`,
-        `dbstore`.`customer`.`custLName` AS `custLName`,
-        `dbstore`.`customer`.`isMember` AS `isMember`
-    FROM
-        `dbstore`.`customer`
+CREATE VIEW customer_view AS
+	SELECT customer.custID, 
+		customer.custFname,
+        customer.custLName,
+        customer.isMember
+FROM customer  
 
-CREATE 
-    ALGORITHM = UNDEFINED 
-    DEFINER = `root`@`localhost` 
-    SQL SECURITY DEFINER
-VIEW `dbstore`.`item_view` AS
-    SELECT 
-        `dbstore`.`item`.`itemID` AS `itemID`,
-        `dbstore`.`item`.`itemName` AS `itemName`,
-        `dbstore`.`item`.`itemQuantity` AS `itemQuantity`,
-        `dbstore`.`item`.`itemPrice` AS `itemPrice`
-    FROM
-        `dbstore`.`item`
+
+
+CREATE VIEW customer_orders_view AS
+	SELECT customer.custID, 
+		customer.custFname,
+        customer.custLName,
+        customer.isMember,
+        orders.orderID,
+        item.itemName,
+        orders.orderQuantity,
+        orders.orderTotalPrice
+FROM customer
+INNER JOIN orders ON customer.custID = orders.custID
+INNER JOIN item ON orders.itemID = item.itemID;
+
+
+
+CREATE VIEW orders_view AS
+	SELECT orders.orderID,
+		orders.itemID,
+        orders.custID,
+        orders.orderQuantity,
+        orders.orderTotalPrice
+FROM orders; 
+
+
+CREATE VIEW items_view AS
+	SELECT item.itemID,
+		item.itemName,
+        item.itemQuantity,
+        item.itemPrice
+FROM item; 
 
 -- CREATE STORED PROCEDURES
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `create_customer`(
+DELIMITER $$$
+CREATE PROCEDURE create_customer(
 	IN p_custFname varchar(200),
 	IN p_custLname varchar(200),
 	IN p_isMember boolean
@@ -72,9 +87,11 @@ BEGIN
       VALUES (p_custFname, p_custLname, p_isMember);
     SET p_custID = LAST_INSERT_ID();
     SELECT p_custID AS custID;
-END
+END$$$
+DELIMITER ;
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `create_item`(
+DELIMITER $$$
+CREATE PROCEDURE create_item(
     IN p_itemName varchar(200),
     IN p_itemQuantity INT,
     IN p_itemPrice DECIMAL(10, 2)
@@ -85,9 +102,11 @@ BEGIN
       VALUES (p_itemName, p_itemQuantity, p_itemPrice);
     SET p_itemID = LAST_INSERT_ID();
     SELECT p_itemID AS itemID;
-END
+END$$$
+DELIMITER ;
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `update_customer`(
+DELIMITER $$$
+CREATE PROCEDURE update_customer(
 	IN p_custID INT,
 	IN p_custFname varchar(200),
 	IN p_custLname varchar(200),
@@ -100,9 +119,12 @@ BEGIN
         isMember = p_isMember
 	WHERE custID = p_custID;
     SELECT p_custID AS custID;
-END
+END$$$
+DELIMITER ;
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `update_item`(
+
+DELIMITER $$$
+CREATE PROCEDURE update_item(
 	IN p_itemID INT,
 	IN p_itemName varchar(200),
 	IN p_itemQuantity INT,
@@ -115,4 +137,112 @@ BEGIN
         itemPrice = p_itemPrice
 	WHERE itemID = p_itemID;
     SELECT p_itemID AS itemID;
-END
+END$$$
+DELIMITER ;
+
+DELIMITER $$$
+CREATE PROCEDURE create_order(
+	IN p_itemID INT,
+	IN p_custID INT,
+	IN p_orderQuantity INT
+)
+BEGIN
+	DECLARE p_orderID INT;
+    DECLARE p_totalPrice DECIMAL(10,2);
+    DECLARE _custID INT;
+    DECLARE _custIsMember BOOLEAN;
+    DECLARE _itemID INT;
+    DECLARE _itemQuantity INT;
+    DECLARE _itemPrice DECIMAL(10,2);
+    
+    SELECT custID, isMember
+    INTO _custID, _custIsMember
+    FROM customer
+    WHERE custID = p_custID;
+    
+    SELECT itemID, itemQuantity, itemPrice
+    INTO _itemID, _itemQuantity, _itemPrice
+    FROM item
+    WHERE itemID = p_itemID;
+    
+    IF _custID IS NOT NULL AND _itemID IS NOT NULL THEN
+    
+    
+      IF _itemQuantity >= p_orderQuantity AND _itemQuantity > 0 THEN
+		IF _custIsMember IS TRUE THEN
+			INSERT INTO orders(itemID, custID, orderQuantity, orderTotalPrice)
+            VALUES(p_itemID, p_custID, p_orderQuantity, ((p_orderQuantity * _itemPrice) - (((p_orderQuantity * _itemPrice)*0.05)))
+            );
+            -- SET p_orderID = LAST_INSERT_ID();
+            SELECT orderID, orderTotalPrice
+            INTO p_orderID, p_totalPrice
+            FROM orders
+            WHERE orderID = LAST_INSERT_ID();
+            
+            SELECT p_orderID AS orderID, P_totalPrice AS orderTotalPrice, 'OK' AS result;
+		ELSE
+			INSERT INTO orders(itemID, custID, orderQuantity, orderTotalPrice)
+            VALUES(p_itemID, p_custID, p_orderQuantity, (p_orderQuantity * _itemPrice)
+            );
+            -- SET p_orderID = LAST_INSERT_ID();
+            SELECT orderID, orderTotalPrice
+            INTO p_orderID, p_totalPrice
+            FROM orders
+            WHERE orderID = LAST_INSERT_ID();
+            
+            SELECT p_orderID AS orderID, p_totalPrice AS orderTotalPrice, 'OK' AS result;
+        END IF;
+      ELSE
+		SELECT 'Quantity ordered exceeds the available stock.' AS result;
+      END IF;  
+        
+    ELSE
+	  SELECT 'Customer Id or Product Id does not exist.' AS result;
+    END IF;  
+
+DELIMITER $$$
+CREATE PROCEDURE delete_customer(
+  IN p_id INT
+)
+BEGIN
+  DELETE FROM orders
+  WHERE custID = p_id;
+
+  DELETE FROM customer
+  WHERE custID = p_id;
+  
+  SELECT custID FROM orders
+  WHERE custID = p_id;
+END$$$
+DELIMITER ;
+
+DELIMITER $$$
+
+CREATE TRIGGER before_insert_orders
+BEFORE INSERT ON Orders
+FOR EACH ROW
+BEGIN
+    DECLARE available_quantity INT;
+
+    -- Get the available quantity for the ordered item
+    SELECT itemQuantity INTO available_quantity
+    FROM Item
+    WHERE itemID = NEW.itemID;
+
+    -- Check if the order quantity is less than or equal to 0
+    IF NEW.orderQuantity <= 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Order quantity must be greater than 0';
+    -- Check if the order quantity is greater than the available quantity
+    ELSEIF NEW.orderQuantity > available_quantity THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Cannot order more than available quantity';
+    ELSE
+        -- Reduce the item quantity in the Item table
+        UPDATE Item
+        SET itemQuantity = itemQuantity - NEW.orderQuantity
+        WHERE itemID = NEW.itemID;
+    END IF;
+END $$$
+
+DELIMITER ;

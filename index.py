@@ -7,7 +7,7 @@ from os import getenv
 from item import get_all_items, get_item_by_id, create_item, update_item, delete_item
 from customer import get_all_customers, get_customer_by_id, create_customers, update_customer, delete_customer
 from order import get_all_orders, get_order_by_id, create_order, update_order, delete_order
-
+from customer_orders import view_customer_orders
 
 app = Flask(__name__)
 
@@ -98,4 +98,9 @@ def orders_by_id(id):
     result = delete_order(id)
   else:
     result = get_order_by_id(id)
+  return jsonify(result)
+
+@app.route("/customer-order/<id>", methods=["GET"])
+def customer_orders(id):
+  result = view_customer_orders(id)
   return jsonify(result)

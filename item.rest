@@ -6,8 +6,8 @@ POST {{host}}/items
 Content-Type: application/json
 
 {
-    "itemName": "ItemC",
-    "itemQuantity": "9",
+    "itemName": "ItemA",
+    "itemQuantity": "15",
     "itemPrice": "11.0"
 }
 

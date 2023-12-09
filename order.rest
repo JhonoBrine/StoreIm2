@@ -1,0 +1,33 @@
+@host = http://127.0.0.1:5000
+
+###Create order
+POST {{host}}/orders
+Content-Type: application/json
+
+{
+    "itemID": "2",
+    "custID": "3",
+    "orderQuantity": "6",
+    "orderTotalPrice": ""
+}
+
+
+### Get all orders
+GET {{host}}/orders
+Content-Type: application/json
+
+
+### Get by id
+GET {{host}}/orders/2
+Content-Type: application/json
+
+### DELETE by id
+DELETE {{host}}/orders/1
+Content-Type: application/json
+
+
+
+
+
+
+

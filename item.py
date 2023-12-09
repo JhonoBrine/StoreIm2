@@ -11,7 +11,7 @@ def create_item(data):
 ### Read all Item List
 
 def get_all_items():
-    result = fetchall("""SELECT * FROM item_view""")
+    result = fetchall("""SELECT * FROM items_view""")
     
     return result
 
