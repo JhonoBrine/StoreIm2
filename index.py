@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, current_app
-from users import get_all_users, get_user_by_id, create_user, update_user, delete_user
+from item import get_all_items, get_item_by_id, create_item, update_item, delete_item
 from flask_mysqldb import MySQL
 from database import set_database
 from dotenv import load_dotenv
@@ -16,7 +16,7 @@ app.config["MYSQL_DB"] = getenv("MYSQL_DB")
 
 app.config["MYSQL_CURSORCLASS"] = getenv("MYSQL_CURSORCLASS")
 app.config["MYSQL_AUTOCOMMIT"] = True if getenv("MYSQL_AUTOCOMMIT") == "True" else False
- 
+
 
 mysql = MySQL()
 mysql.init_app(app)
@@ -24,25 +24,25 @@ set_database(mysql)
 
 @app.route("/")
 def home():
-  return "<h1>Hello, CSIT327!</h1>"
+  return "<h1>Welcome to the Store Home Page</h1> </br> <h3>Created by Rey Mar and Friends</h3>"
 
-@app.route("/users", methods=["GET", "POST"])
-def users():
+@app.route("/items", methods=["GET", "POST"])
+def items():
   if request.method == "POST":
     data = request.get_json()
-    result = create_user(data)
+    result = create_item(data)
   else:
-    result = get_all_users()
+    result = get_all_items()
   return jsonify(result)
 
-@app.route("/users/<id>", methods=["GET", "PUT", "DELETE"])
-def users_by_id(id):
+@app.route("/items/<id>", methods=["GET", "PUT", "DELETE"])
+def items_by_id(id):
   if request.method == "PUT":
     data = request.get_json()
     data["id"] = id
-    result = update_user(id, data)
+    result = update_item(id, data)
   elif request.method == "DELETE":
-    result = delete_user(id)
+    result = delete_item(id)
   else:
-    result = get_user_by_id(id)
+    result = get_item_by_id(id)
   return jsonify(result)

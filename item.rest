@@ -1,0 +1,34 @@
+
+@host = http://127.0.0.1:5000
+
+### Create a new item
+POST {{host}}/items
+Content-Type: application/json
+
+{
+    "itemName": "Piatos_Cheese-40g",
+    "itemQuantity": "35",
+    "itemPrice": "13.50"
+}
+
+### Get the list of all the items
+GET {{host}}/items
+Content-Type: application/json
+
+### Get a single item by ID
+GET {{host}}/items/1
+Content-Type: application/json
+
+### Update an item
+PUT {{host}}/items/1
+Content-Type: application/json
+
+{
+    "itemName": "Piatos_Cheese-85g",
+    "itemQuantity": "20",
+    "itemPrice": "37.50"
+}
+
+### Delete an item
+DELETE {{host}}/items/4
+Content-Type: application/json
