@@ -5,8 +5,8 @@ POST {{host}}/customers
 Content-Type: application/json
 
 {
-    "custFname": "Joahnna Mi2",
-    "custLname": "Bas",
+    "custFname": "fdgdfgdgdgf",
+    "custLname": "Rasdasdasdadas",
     "isMember": "1"
 }
 
@@ -20,15 +20,15 @@ GET {{host}}/customers/1
 Content-Type: application/json
 
 ### Update a customer
-PUT {{host}}/customers/4
+PUT {{host}}/customers/1
 Content-Type: application/json
 
 {
-    "custFname": "Jhon Lorenz",
-    "custLname": "Pabroa",
+    "custFname": "Joahnna Mae",
+    "custLname": "Bas",
     "isMember": "1"
 }
 
 ### Delete a customer
-DELETE {{host}}/customers/1
+DELETE {{host}}/customers/8
 Content-Type: application/json

@@ -6,8 +6,8 @@ Content-Type: application/json
 
 {
     "itemID": "2",
-    "custID": "3",
-    "orderQuantity": "6",
+    "custID": "1",
+    "orderQuantity": "18",
     "orderTotalPrice": ""
 }
 
@@ -22,7 +22,7 @@ GET {{host}}/orders/2
 Content-Type: application/json
 
 ### DELETE by id
-DELETE {{host}}/orders/1
+DELETE {{host}}/orders/3
 Content-Type: application/json
 
 

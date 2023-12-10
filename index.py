@@ -28,7 +28,7 @@ set_database(mysql)
 
 @app.route("/")
 def home():
-  return "<h1>Welcome to the Store Home Page</h1> </br> <h3>Created by Rey Mar and Friends</h3>"
+  return " <h1>Welcome to the Store Home Page</h1> <h3>Created by Rey Mar and Friends</h3> <p>Gil Joshua Yabao | BSIT -3 </br> Rey Mar Segalle | BSIT-3 </br> Jhon Lorenz Pabroa | BSIT-3 <p/>  <a href='/orders'>Orders JSON</a> </br> <a href='/customers'>Customers JSON</a> </br> <a href='/items'>Items JSON</a> </br> <a href='/customer-order/1'>Customer-Order JSON</a>"
 
 ### ITEMS
 
@@ -99,6 +99,8 @@ def orders_by_id(id):
   else:
     result = get_order_by_id(id)
   return jsonify(result)
+
+### Customer Order
 
 @app.route("/customer-order/<id>", methods=["GET"])
 def customer_orders(id):

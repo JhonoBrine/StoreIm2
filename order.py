@@ -3,11 +3,14 @@ from database import fetchall, fetchone, execute
 ### CREATE Order
 
 def create_order(data):
-    cur = execute("""CALL create_order(%s, %s, %s)""",
-                  (data["itemID"], data["custID"], data["orderQuantity"]))
+    cur = execute("""CALL create_order(%s, %s, %s)""", (data["itemID"], data["custID"], data["orderQuantity"]))
     row = cur.fetchone()
+    
     data["orderID"] = row["orderID"]
     data["orderTotalPrice"] = row["orderTotalPrice"]
+    data["result"] = row["result"]
+
+        
     return data
 
 ### Read all Order List

@@ -18,7 +18,7 @@ def get_all_items():
 ### Read Single Item
 
 def get_item_by_id(id):
-    result = fetchone("""SELECT * FROM item_view WHERE itemID = %s""", (id, ))
+    result = fetchone("""SELECT * FROM items_view WHERE itemID = %s""", (id, ))
     
     return result
 

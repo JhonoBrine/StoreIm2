@@ -6,9 +6,9 @@ POST {{host}}/items
 Content-Type: application/json
 
 {
-    "itemName": "ItemA",
-    "itemQuantity": "15",
-    "itemPrice": "11.0"
+    "itemName": "ItemC",
+    "itemQuantity": "31",
+    "itemPrice": "9.10"
 }
 
 ### Get the list of all the items
@@ -30,5 +30,5 @@ Content-Type: application/json
 }
 
 ### Delete an item
-DELETE {{host}}/items/4
+DELETE {{host}}/items/1
 Content-Type: application/json
