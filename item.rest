@@ -20,15 +20,15 @@ GET {{host}}/items/1
 Content-Type: application/json
 
 ### Update an item
-PUT {{host}}/items/1
+PUT {{host}}/items/2
 Content-Type: application/json
 
 {
-    "itemName": "Piatos_Cheese-85g",
-    "itemQuantity": "20",
-    "itemPrice": "37.50"
+    "itemName": "ItemB",
+    "itemQuantity": "50",
+    "itemPrice": "13.55"
 }
 
 ### Delete an item
-DELETE {{host}}/items/1
+DELETE {{host}}/items/6
 Content-Type: application/json

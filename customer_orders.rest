@@ -3,3 +3,8 @@
 ### GET customer's orders
 GET {{host}}/customer-order/1
 Content-Type: application/json
+
+
+### GET all customers' orders
+GET {{host}}/customer-order
+Content-Type: application/json

@@ -3,7 +3,7 @@ from database import fetchall, fetchone, execute
 ### Create Customers
 
 def create_customers(data):
-    result = execute("""CALL create_customer(%s, %s, %s)""", (data["custFname"], data["custLname"], data["isMember"]))
+    result = execute("""CALL create_customer(%s, %s, %s)""", (data["custFname"], data["custLName"], data["isMember"]))
     row = result.fetchone()
     data["custID"] = row["custID"]
     
@@ -24,7 +24,7 @@ def get_customer_by_id(id):
 ### Update Single Customer
 
 def update_customer(id, data):
-    result = execute("""CALL update_customer(%s, %s, %s, %s)""", (id, data["custFname"], data["custLname"], data["isMember"]))
+    result = execute("""CALL update_customer(%s, %s, %s, %s)""", (id, data["custFname"], data["custLName"], data["isMember"]))
     row = result.fetchone()
     data["custID"] = row["custID"]
     return data
@@ -35,5 +35,6 @@ def delete_customer(id):
     cur = execute("""CALL delete_customer(%s)""", (id, ))
     row = cur.fetchone()
     if row is None:
-      return True
+        return True
     return False
+

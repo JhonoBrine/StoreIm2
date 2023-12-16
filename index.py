@@ -1,15 +1,17 @@
-from flask import Flask, request, jsonify, current_app
+from flask import Flask, request, jsonify, current_app, render_template
 from flask_mysqldb import MySQL
 from database import set_database
 from dotenv import load_dotenv
 from os import getenv
+from flask_cors import CORS
 
 from item import get_all_items, get_item_by_id, create_item, update_item, delete_item
 from customer import get_all_customers, get_customer_by_id, create_customers, update_customer, delete_customer
 from order import get_all_orders, get_order_by_id, create_order, update_order, delete_order
-from customer_orders import view_customer_orders
+from customer_orders import view_customer_orders, view_customer_orders_by_id
 
 app = Flask(__name__)
+CORS(app)
 
 load_dotenv()
 app.config["MYSQL_HOST"] = getenv("MYSQL_HOST")
@@ -28,7 +30,8 @@ set_database(mysql)
 
 @app.route("/")
 def home():
-  return " <h1>Welcome to the Store Home Page</h1> <h3>Created by Rey Mar and Friends</h3> <p>Gil Joshua Yabao | BSIT -3 </br> Rey Mar Segalle | BSIT-3 </br> Jhon Lorenz Pabroa | BSIT-3 <p/>  <a href='/orders'>Orders JSON</a> </br> <a href='/customers'>Customers JSON</a> </br> <a href='/items'>Items JSON</a> </br> <a href='/customer-order/1'>Customer-Order JSON</a>"
+  return render_template("index.html")
+
 
 ### ITEMS
 
@@ -71,7 +74,11 @@ def customers_by_id(id):
     data["id"] = id
     result = update_customer(id, data)
   elif request.method == "DELETE":
-    result = delete_customer(id)
+    result = get_customer_by_id(id)
+    if result is not None:
+      result = delete_customer(id)
+    else:
+      result = {"error" : "Customer not found"}
   else:
     result = get_customer_by_id(id)
   return jsonify(result)
@@ -83,7 +90,13 @@ def customers_by_id(id):
 def orders():
   if request.method == "POST":
     data = request.get_json()
-    result = create_order(data)
+    checkCustId =  get_customer_by_id(data["custID"])
+    checkItemId = get_item_by_id(data["itemID"])
+    
+    if checkCustId is not None and checkItemId is not None:
+      result = create_order(data)
+    else:
+      result = {"error" : "Customer or Item not found!"}
   else:
     result = get_all_orders()
   return jsonify(result)
@@ -102,7 +115,14 @@ def orders_by_id(id):
 
 ### Customer Order
 
-@app.route("/customer-order/<id>", methods=["GET"])
-def customer_orders(id):
-  result = view_customer_orders(id)
+@app.route("/customer-order", methods=["GET"])
+def customer_orders():
+  result = view_customer_orders()
   return jsonify(result)
+
+@app.route("/customer-order/<id>", methods=["GET"])
+def customer_orders_by_id(id):
+  result = view_customer_orders_by_id(id)
+  return jsonify(result)
+
+

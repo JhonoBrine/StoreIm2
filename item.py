@@ -35,8 +35,8 @@ def update_item(id, data):
 ### Delete Single Item
 
 def delete_item(id):
-    
-    result = execute("""DELETE FROM item WHERE itemID = %s""", (id, ))
-    result.fetchone()
-    
-    return result.rowcount > 0
+    cur = execute("""CALL delete_item(%s)""", (id, ))
+    row = cur.fetchone()
+    if row is None:
+        return True
+    return False
