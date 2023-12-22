@@ -267,3 +267,23 @@ BEGIN
 END $$$
 
 DELIMITER ;
+
+
+-- DELETE CUSTOMER
+
+DELIMITER $$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_item`(
+  IN p_id INT
+)
+BEGIN
+  DELETE FROM orders
+  WHERE itemID = p_id;
+  
+  DELETE FROM item
+  WHERE itemID = p_id;
+  
+  SELECT itemID FROM orders
+  WHERE itemID = p_id;
+END $$$
+
+DELIMITER ;
