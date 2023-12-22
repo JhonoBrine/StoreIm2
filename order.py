@@ -14,11 +14,7 @@ def create_order(data):
         return data
     except KeyError as e:
         return ("Order cannot be made due to Item or Customer not existing")
-    
-    
 
-
-    
 
 ### Read all Order List
 

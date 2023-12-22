@@ -5,7 +5,7 @@ POST {{host}}/orders
 Content-Type: application/json
 
 {
-    "itemID": "3",
+    "itemID": "4",
     "custID": "17",
     "orderQuantity": "1",
     "orderTotalPrice": ""
